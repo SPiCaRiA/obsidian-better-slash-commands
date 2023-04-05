@@ -2,7 +2,7 @@ import type {OnSettingChangeCallback, Settings} from 'Types';
 
 import {CommandMenu} from 'CommandMenu';
 import {DEFAULT_SETTINGS} from 'Defaults';
-import {SampleSettingTab} from 'Settings';
+import {BetterSlashCommandsSettingTab} from 'Settings';
 
 import {Plugin} from 'obsidian';
 
@@ -17,7 +17,7 @@ export default class MyPlugin extends Plugin {
   public async onload() {
     await this.loadSettings();
 
-    this.addSettingTab(new SampleSettingTab(this.app, this));
+    this.addSettingTab(new BetterSlashCommandsSettingTab(this.app, this));
     this.registerEditorSuggest(new CommandMenu(this.app, this));
   }
 

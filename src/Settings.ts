@@ -2,7 +2,7 @@ import type {Plugin} from 'Types';
 
 import {App, PluginSettingTab, Setting} from 'obsidian';
 
-export class SampleSettingTab extends PluginSettingTab {
+export class BetterSlashCommandsSettingTab extends PluginSettingTab {
   plugin: Plugin;
 
   constructor(app: App, plugin: Plugin) {
