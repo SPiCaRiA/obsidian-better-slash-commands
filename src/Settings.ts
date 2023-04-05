@@ -1,4 +1,4 @@
-import type {Plugin} from 'Plugin.types';
+import type {Plugin} from 'Types';
 
 import {App, PluginSettingTab, Setting} from 'obsidian';
 
@@ -16,17 +16,29 @@ export class SampleSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName('Setting #1')
-      .setDesc("It's a secret")
+      .setName('Menu trigger prompt')
+      .setDesc('Single character trigger is strongly recommended.')
       .addText(text =>
         text
-          .setPlaceholder('Enter your secret')
-          .setValue(this.plugin.getSettings('mySetting'))
+          .setPlaceholder('/')
+          .setValue(this.plugin.getSetting('menuTriggerPrompt'))
           .onChange(async value => {
-            console.log('Secret: ' + value);
-            this.plugin.setSettings('mySetting', value);
+            this.plugin.setSetting(
+              'menuTriggerPrompt',
+              value || this.plugin.getDefaultSetting('menuTriggerPrompt'),
+            );
             await this.plugin.saveSettings();
           }),
       );
+
+    // TODO: add/delete commands with GUI
+    // new Setting(containerEl).setName('Commands').addButton(button => {
+    //   button
+    //     .setIcon(customIcons.cMenuToolBarAdd)
+    //     .setTooltip('Add new command')
+    //     .onClick(() =>
+    //       this.plugin.setSetting('commands', ref => addCommand(ref)),
+    //     );
+    // });
   }
 }

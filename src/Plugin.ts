@@ -1,5 +1,6 @@
-import type {Settings, SettingsChangeCallback} from 'Settings.types';
+import type {OnSettingChangeCallback, Settings} from 'Types';
 
+import {CommandMenu} from 'CommandMenu';
 import {DEFAULT_SETTINGS} from 'Defaults';
 import {SampleSettingTab} from 'Settings';
 
@@ -9,14 +10,15 @@ import {Plugin} from 'obsidian';
 
 export default class MyPlugin extends Plugin {
   private settings: Settings;
-  private settingsChangeCallbacks: {
-    [settingsName in keyof Settings]?: SettingsChangeCallback<keyof Settings>[];
+  private onSettingChangeCallbacks: {
+    [settingName in keyof Settings]?: OnSettingChangeCallback<keyof Settings>[];
   } = {};
 
   public async onload() {
     await this.loadSettings();
 
     this.addSettingTab(new SampleSettingTab(this.app, this));
+    this.registerEditorSuggest(new CommandMenu(this.app, this));
   }
 
   public onunload() {}
@@ -31,31 +33,63 @@ export default class MyPlugin extends Plugin {
 
   // --- Setting Management ---
 
-  public onSettingsChange<K extends keyof Settings>(
-    settingsName: K,
-    callback: SettingsChangeCallback<K>,
+  public onSettingChange<K extends keyof Settings>(
+    settingName: K,
+    callback: OnSettingChangeCallback<K>,
   ) {
-    if (!this.settingsChangeCallbacks[settingsName]) {
-      this.settingsChangeCallbacks[settingsName] = [];
+    if (!this.onSettingChangeCallbacks[settingName]) {
+      this.onSettingChangeCallbacks[settingName] = [];
     }
-    this.settingsChangeCallbacks[settingsName]?.push(callback);
+    this.onSettingChangeCallbacks[settingName]?.push(callback);
   }
 
-  public getSettings<K extends keyof Settings>(settingsName: K) {
-    return this.settings[settingsName];
+  public getSetting<K extends keyof Settings>(settingName: K) {
+    return this.settings[settingName];
   }
 
-  public setSettings<K extends keyof Settings>(
-    settingsName: K,
+  /**
+   * Set reference setting.
+   *
+   * @param settingName
+   * @param refCallback
+   */
+  public setSetting<K extends keyof Settings>(
+    settingName: K,
+    valCallback: (ref: Settings[K]) => void,
+  ): void;
+
+  /**
+   * Set value setting.
+   *
+   * @param settingName
+   * @param val
+   */
+  public setSetting<K extends keyof Settings>(
+    settingName: K,
     val: Settings[K],
+  ): void;
+
+  public setSetting<K extends keyof Settings>(
+    settingName: K,
+    valOrCallback: Settings[K] | ((ref: Settings[K]) => void),
   ) {
-    this.settingsChangeCallbacks[settingsName]?.forEach(cb =>
-      cb(val, this.settings[settingsName]),
-    );
-    this.settings[settingsName] = val;
+    if (typeof valOrCallback === 'function') {
+      // Update the reference setting with the callback.
+      valOrCallback(this.settings[settingName]);
+      // The new value/old value args passed to onSettingChange callbacks
+      // are the same
+      this.onSettingChangeCallbacks[settingName]?.forEach(cb =>
+        cb(this.settings[settingName], this.settings[settingName]),
+      );
+    } else {
+      this.onSettingChangeCallbacks[settingName]?.forEach(cb =>
+        cb(valOrCallback, this.settings[settingName]),
+      );
+      this.settings[settingName] = valOrCallback;
+    }
   }
 
-  public getDefaultSettings<K extends keyof Settings>(settingsName: K) {
-    return DEFAULT_SETTINGS[settingsName];
+  public getDefaultSetting<K extends keyof Settings>(settingName: K) {
+    return DEFAULT_SETTINGS[settingName];
   }
 }

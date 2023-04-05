@@ -1,7 +1,7 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "env": { "node": true },
+  "env": {"node": true},
   "plugins": [
     "@typescript-eslint",
     "prettier",
@@ -20,7 +20,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
+    "@typescript-eslint/no-unused-vars": ["warn", {"args": "none"}],
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
@@ -63,5 +63,13 @@
     "import/newline-after-import": "warn",
     // (This helps configure simple-import-sort) Merge imports of the same file
     "import/no-duplicates": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      }
+    }
+  ]
 }
