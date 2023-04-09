@@ -11,17 +11,29 @@ export type Settings = {
   commands: Commands;
 };
 
-export type Command = {
-  id: string;
-  name: string;
-  icon: {
-    value: string;
-    isSvg: boolean;
-  };
+export type Command =
+  | {
+      id: string;
+      name: string;
+      icon: {
+        value: string;
+        isSvg: boolean;
+      };
 
-  // Custom command with JavaScript function.
-  exec?: (app: AppExt) => void;
-};
+      // Custom command with JavaScript function.
+      exec?: never;
+    }
+  | {
+      id?: never;
+      name: string;
+      icon: {
+        value: string;
+        isSvg: boolean;
+      };
+
+      // Custom command with JavaScript function.
+      exec: (app: AppExt) => void;
+    };
 
 export type OnSettingChangeCallback<K extends keyof Settings> = (
   newVal: Settings[K],
