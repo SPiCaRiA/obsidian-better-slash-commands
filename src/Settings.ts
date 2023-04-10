@@ -31,6 +31,24 @@ export class BetterSlashCommandsSettingTab extends PluginSettingTab {
           }),
       );
 
+    new Setting(containerEl)
+      .setName('Create attachments under folder note folder')
+      .setDesc(
+        ' If true, we mimic the behavior of notion: make current note a ' +
+          'folder note (if it is not) and put newly created embedded ' +
+          'attachments in the folder. (Requires folder-note-core plug-in). ' +
+          'Otherwise, the attachments will be created in the same folder as ' +
+          'the active note. ',
+      )
+      .addToggle(toggle =>
+        toggle
+          .setValue(this.plugin.getSetting('attachmentUnderFolderNoteFolder'))
+          .onChange(async value => {
+            this.plugin.setSetting('attachmentUnderFolderNoteFolder', value);
+            await this.plugin.saveSettings();
+          }),
+      );
+
     // TODO: add/delete commands with GUI
     // new Setting(containerEl).setName('Commands').addButton(button => {
     //   button

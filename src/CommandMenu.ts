@@ -1,5 +1,7 @@
 import type {AppExt, Command, Plugin} from 'Types';
 
+import {customCommandExecMap} from 'CustomCommands';
+
 import jstyle from 'jstyle';
 import {
   App,
@@ -146,12 +148,11 @@ export class CommandMenu extends EditorSuggest<Command> {
     // Delete trigger char and command query input.
     this.context?.editor.replaceRange('', this.context.start, this.context.end);
 
-    if (cmd.exec) {
-      // Custom command.
-      cmd.exec(this.plugin.app as AppExt);
-    } else {
+    if (cmd.obCommandID) {
       // Obsidian command.
-      (this.plugin.app as AppExt).commands.executeCommandById(cmd.id);
+      (this.plugin.app as AppExt).commands.executeCommandById(cmd.obCommandID);
+    } else {
+      customCommandExecMap[cmd.name](this.plugin.app as AppExt, this.plugin);
     }
 
     this.close();

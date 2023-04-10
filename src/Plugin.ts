@@ -8,7 +8,7 @@ import {Plugin} from 'obsidian';
 
 // Remember to rename these classes and interfaces!
 
-export default class MyPlugin extends Plugin {
+export default class BetterSlashCommandPlugin extends Plugin {
   private settings: Settings;
   private onSettingChangeCallbacks: {
     [settingName in keyof Settings]?: OnSettingChangeCallback<keyof Settings>[];

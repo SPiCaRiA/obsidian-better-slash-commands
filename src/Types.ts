@@ -8,32 +8,26 @@ export type Commands = Record<string, Command>;
 export type Settings = {
   menuTriggerPrompt: string;
 
+  attachmentUnderFolderNoteFolder: boolean;
+
+  attachmentExtensions: string[];
+
   commands: Commands;
 };
 
-export type Command =
-  | {
-      id: string;
-      name: string;
-      icon: {
-        value: string;
-        isSvg: boolean;
-      };
+export type Command = {
+  obCommandID?: string;
+  name: string;
+  icon: {
+    value: string;
+    isSvg: boolean;
+  };
+};
 
-      // Custom command with JavaScript function.
-      exec?: never;
-    }
-  | {
-      id?: never;
-      name: string;
-      icon: {
-        value: string;
-        isSvg: boolean;
-      };
-
-      // Custom command with JavaScript function.
-      exec: (app: AppExt) => void;
-    };
+export type CustomCommandExecMap = Record<
+  string,
+  (app: AppExt, plugin: Plugin) => void
+>;
 
 export type OnSettingChangeCallback<K extends keyof Settings> = (
   newVal: Settings[K],
