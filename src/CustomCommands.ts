@@ -34,7 +34,6 @@ async function createAttachmentPath(note: TFile | null, plugin: Plugin) {
   if (note === null) {
     throw new Error('Better Slash Command: cannot get active file.');
   }
-  console.log(plugin.getSetting('attachmentUnderFolderNoteFolder'));
 
   // TODO: read setting from plugin
   return plugin.getSetting('attachmentUnderFolderNoteFolder')
@@ -59,7 +58,6 @@ function createEmbedAttachment(app: AppExt, plugin: Plugin, extension: string) {
   // Create stub link to the canvas file.
   createAttachmentPath(app.workspace.getActiveFile(), plugin).then(
     attachmentPath => {
-      console.log(attachmentPath);
       editor.replaceRange(
         `![[${attachmentPath}.${extension}]]`,
         cursor,

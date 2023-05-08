@@ -1,9 +1,9 @@
 {
-  "id": "obsidian-better-slash-commands",
+  "id": "better-slash-commands",
   "name": "Better Slash Commands",
   "version": "0.0.1",
   "minAppVersion": "0.15.0",
-  "description": "A better slash command for Obsidian (https://obsidian.md).",
+  "description": "A better slash command suggestion with opinionated command choices.",
   "author": "SPiCaRia",
   "authorUrl": "https://github.com/SPiCaRiA",
   "isDesktopOnly": false
